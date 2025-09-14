@@ -1,7 +1,7 @@
 if (process.env.NODE_ENV !== "production") {
     require("dotenv").config();
 }
-const port = process.env.PORT || 8080;
+const port = process.env.PORT || 4000 
 const express=require("express");
 const app=express();
 const mongoose=require("mongoose");
@@ -111,6 +111,6 @@ app.use((err, req, res, next )=>{
 });
 
 
-app.listen(8080,()=>{
-    console.log("Server is running on port 8080");
+app.listen(port, () => {
+  console.log(`Example app listening on port ${port}`)
 });
