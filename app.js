@@ -42,33 +42,33 @@ app.use(methodOverride("_method")); // for PUT and DELETE requests
 app.engine("ejs", ejsMate); // Use ejsMate for layout support
 app.use(express.static(path.join(__dirname, "/public"))); // Serve static files from the public directory
 
-const store=MongoStore.create({
-    mongoUrl:dbUrl,
-    crypto:{
-    secret:process.env.SECRET,
+const store = MongoStore.create({
+    mongoUrl: dbUrl,
+    crypto: {
+        secret: process.env.SECRET,
     },
-    touchAfter: 24*3600,
+    touchAfter: 24 * 3600, // time period in seconds
 });
-store.on("error",()=>{
-    console.log("ERROR in MONGO SESSION STORE",err);
-});
-const sessionOptions={
 
-    secret:process.env.SECRET,
-    resave:false,
-    saveUninitialized:true,
-    cookie:{
-        expires:Date.now() + 7*24*60*60*1000,
-        maxAge: 7*24 *60 *60 *1000,
+store.on("error", (err) => {
+    console.log("ERROR in MONGO SESSION STORE", err);
+});
+
+const sessionOptions = {
+    store,   // <-- add this line
+    secret: process.env.SECRET,
+    resave: false,
+    saveUninitialized: true,
+    cookie: {
+        expires: Date.now() + 7 * 24 * 60 * 60 * 1000, // 1 week
+        maxAge: 7 * 24 * 60 * 60 * 1000,
         httpOnly: true,
+        // secure: true, // uncomment this if you are using HTTPS
     },
 };
 
-// app.get("/",(req,res)=>{
-//     res.send("Hello World");
-// });
-
 app.use(session(sessionOptions));
+
 app.use(flash());
 
 app.use(passport.initialize());
